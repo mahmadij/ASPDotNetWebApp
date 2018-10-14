@@ -1,0 +1,27 @@
+﻿
+@Model ASPDotNetWebApplication.Models.Item
+@{
+    ViewBag.Title = "Example";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var strongClass = Model.Features == null || Model.Features.Count > 0 ? "strong" : null;
+}
+
+<h2 class="@strongClass">@Model.Name</h2>
+
+    @if (Model.Features.Count == 0)
+    {
+        <text>No features are added to this item yet.</text>
+    }
+    else
+    {
+        <ul>
+            @foreach (var feature in Model.Features)
+            {
+                <li>@feature.Name</li>
+            }
+        </ul>
+    }
+
+    
