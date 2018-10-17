@@ -44,20 +44,21 @@ namespace ASPDotNetWebApplication.Controllers.API
 
         //POST /api/items
         [HttpPost]
-        public ItemDTO CreateItem(Item item)
+        public ItemDTO CreateItem(ItemDTO itemDTO)
         {
             if (!ModelState.IsValid)
             {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
+            Item item = Mapper.Map<ItemDTO, Item>(itemDTO);
             _context.Items.Add(item);
             _context.SaveChanges();
-            return Mapper.Map<Item,ItemDTO>(item);
+            return itemDTO;
         }
 
         //PUT /api/items/{id}
         [HttpPut]
-        public void UpdateItem(int Id, Item item)
+        public void UpdateItem(int Id, ItemDTO itemDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -68,6 +69,7 @@ namespace ASPDotNetWebApplication.Controllers.API
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
+            Item item = Mapper.Map<ItemDTO, Item>(itemDTO);
             ItemInDb.Name = item.Name;
             ItemInDb.Status = item.Status;
 
