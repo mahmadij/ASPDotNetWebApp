@@ -69,9 +69,10 @@ namespace ASPDotNetWebApplication.Controllers.API
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-            Item item = Mapper.Map<ItemDTO, Item>(itemDTO);
-            ItemInDb.Name = item.Name;
-            ItemInDb.Status = item.Status;
+            //The mapper already knows which are the source and target object types
+            //Also, the ItemInDb object is loaded into context therefore being tracked for changes and updated
+            //Also, the egneric assignment can be omitted as compiler already knows from the objects we are passing in what the types are
+            Mapper.Map(itemDTO,ItemInDb);
 
             _context.SaveChanges();
         }

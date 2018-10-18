@@ -8,8 +8,13 @@ namespace ASPDotNetWebApplication.App_Start
     {
         public MappingProfile()
         {
-                CreateMap<Item, ItemDTO>();
-                CreateMap<ItemDTO, Item>();
+            //Item
+            CreateMap<Item, ItemDTO>();
+            CreateMap<ItemDTO, Item>();
+
+            //Feature
+            CreateMap<Feature, FeatureDTO>();
+            CreateMap<FeatureDTO, Feature>();
         }
     }
 }
