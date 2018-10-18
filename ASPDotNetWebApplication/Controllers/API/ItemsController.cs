@@ -32,28 +32,30 @@ namespace ASPDotNetWebApplication.Controllers.API
         }
 
         //GET /api/items/{id}
-        public ItemDTO GetItem(int Id)
+        public IHttpActionResult GetItem(int Id)
         {
             var Item = _context.Items.Include(it => it.Features).SingleOrDefault(i => i.Id == Id && i.Status == 1);
             if(Item == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                NotFound();
             }
-            return Mapper.Map<Item, ItemDTO>(Item);
+            return Ok( Mapper.Map<Item, ItemDTO>(Item));
         }
 
         //POST /api/items
         [HttpPost]
-        public ItemDTO CreateItem(ItemDTO itemDTO)
+        public IHttpActionResult CreateItem(ItemDTO itemDTO)
         {
             if (!ModelState.IsValid)
             {
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                //throw new HttpResponseException(HttpStatusCode.BadRequest);
+                return BadRequest();
             }
             Item item = Mapper.Map<ItemDTO, Item>(itemDTO);
             _context.Items.Add(item);
             _context.SaveChanges();
-            return itemDTO;
+            itemDTO.Id = item.Id;
+            return Created(new Uri(Request.RequestUri + "/" + item.Id),itemDTO);
         }
 
         //PUT /api/items/{id}

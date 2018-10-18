@@ -32,31 +32,36 @@ namespace ASPDotNetWebApplication.Controllers.API
         }
 
         //GET /api/features/{id}
-        public FeatureDTO GetFeature(int id)
+        public IHttpActionResult GetFeature(int id)
         {
             var feature = _context.Features.SingleOrDefault(f => f.Id == id);
-            return Mapper.Map<Feature, FeatureDTO>(feature);
+            if(feature == null)
+            {
+                NotFound();
+            }
+            return Ok(Mapper.Map<Feature, FeatureDTO>(feature));
         }
 
         //POST /api/items
-        public FeatureDTO CreateFeature(FeatureDTO featureDTO)
+        public IHttpActionResult CreateFeature(FeatureDTO featureDTO)
         {
             var feature = Mapper.Map<FeatureDTO, Feature>(featureDTO);
             _context.Features.Add(feature);
             _context.SaveChanges();
-            return featureDTO;
+            featureDTO.Id = feature.Id;
+            return Created( new Uri(Request.RequestUri+"/"+feature.Id) ,featureDTO);
         }
 
         //PUT /api/items/{id}
-        public FeatureDTO UpdateFeature(int id, FeatureDTO featureDTO)
+        public IHttpActionResult UpdateFeature(int id, FeatureDTO featureDTO)
         {
             var featureFromDB = _context.Features.SingleOrDefault(f => f.Id == id);
             if(featureFromDB == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                NotFound();
             }
             Mapper.Map(featureDTO, featureFromDB);
-            return featureDTO;
+            return Ok(featureDTO);
         }
 
         //DELETE /api/items/{id}
